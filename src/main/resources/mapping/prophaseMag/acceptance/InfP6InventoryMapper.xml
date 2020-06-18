@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.prophaseMag.acceptance.mapper.InfP6InventoryMapper">
+	
+	<!-- 通过"移交编号"查询所有 - P6设备设施初始清册数据 -->
+	<select id="findAllByTransfernum" resultType="com.luckyun.tjam.prophaseMag.acceptance.model.InfP6Inventory" parameterType="String">
+		select a.* 
+		from inf_p6_inventory a 
+		where a.stransferno = #{stransferno}
+		order by a.dinfaccept desc
+	</select>
+
+	<select id="findAllByIhascopied" resultType="com.luckyun.tjam.prophaseMag.acceptance.model.InfP6Inventory">
+		select a.*
+		from inf_p6_inventory a where a.ICOPYSTATE IS NULL
+	</select>
+
+	<update id="updateIhascopied" parameterType="com.luckyun.tjam.prophaseMag.acceptance.model.InfP6Inventory">
+		UPDATE INF_P6_INVENTORY set STRANSFERNO = #{condition.stransferno},ICOPYSTATE = #{condition.icopystate} where INDOCNO = #{condition.indocno}
+	</update>
+
+	<select id="findAllByIhascopiedAndIupdateState" resultType="com.luckyun.tjam.prophaseMag.acceptance.model.InfP6Inventory">
+		select a.* from inf_p6_inventory a where a.ICOPYSTATE IS not NULL and a.iupdatestate is not null
+	</select>
+
+	<update id="updateIupdateState" parameterType="Long">
+		update inf_p6_inventory set iupdatestate = null where indocno = #{indocno}
+	</update>
+
+</mapper>

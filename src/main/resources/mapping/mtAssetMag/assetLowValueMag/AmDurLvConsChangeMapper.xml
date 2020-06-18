@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.mtAssetMag.assetLowValueMag.mapper.AmDurLvConsChangeMapper">
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="com.luckyun.tjam.mtAssetMag.assetLowValueMag.model.AmDurLvConsChange"
+            parameterType="com.luckyun.tjam.mtAssetMag.assetLowValueMag.param.AmDurLvConsChangeParam">
+        select a.indocno,a.sfcode,a.sfname,a.iapprovalstate,a.ideptid,a.sregid,a.snote
+        ,a.ilineid, count(b.indocno) as iqty,a.idel,a.dregt from am_dur_lv_cons_change a
+         LEFT JOIN AM_DUR_LV_CONS_CHANGE_DT b on a.indocno = b.ilinkno and b.idel =0
+        where a.idel = 0
+        group by a.indocno,a.sfcode,a.sfname,a.iapprovalstate,
+          a.ideptid,a.sregid,a.snote,a.ilineid,a.idel,a.dregt
+    </select>
+
+    <!-- 查询单条 -->
+    <select id="findOne" resultType="com.luckyun.tjam.mtAssetMag.assetLowValueMag.model.AmDurLvConsChange" parameterType="Long">
+		select a.*
+		from am_dur_lv_cons_change a
+		where a.indocno = #{indocno} and a.idel = 0
+	</select>
+
+    <!-- 查询当前天最大编号 -->
+    <select id="findMaxSappmtno" resultType="com.luckyun.tjam.mtAssetMag.assetLowValueMag.model.AmDurLvConsChange"
+            parameterType="com.luckyun.tjam.mtAssetMag.assetLowValueMag.param.AmDurLvConsChangeParam">
+        select a.sfcode from am_dur_lv_cons_change a
+        where a.idel = 0 and a.sfcode like '%${condition.sfcode}%' order by a.sfcode desc
+    </select>
+
+
+
+</mapper>

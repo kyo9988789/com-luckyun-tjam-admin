@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.mtAssetMag.amAssetEnable.mapper.AmAssetEnableDtMapper">
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="com.luckyun.tjam.mtAssetMag.amAssetEnable.model.AmAssetEnableDt"
+            parameterType="com.luckyun.tjam.mtAssetMag.assetLowValueMag.param.AmDurLvConsChangeDtParam">
+        select a.indocno,a.sfcode,a.sfname,a.iapprovalstate,a.ilineid
+        ,a.iqty,a.seqclassno,a.senablereason from am_asset_enable_dt a
+        where a.idel = 0
+        order by a.dregt desc
+    </select>
+
+    <!-- 查询单条 -->
+    <select id="findOne" resultType="com.luckyun.tjam.mtAssetMag.amAssetEnable.model.AmAssetEnableDt" parameterType="Long">
+		select a.*
+		from am_asset_enable_dt a
+		where a.indocno = #{indocno} and a.idel = 0
+	</select>
+
+
+    <!-- 通过外键查询所有 -->
+    <select id="findAllByIlinkno" resultType="com.luckyun.tjam.mtAssetMag.amAssetEnable.model.AmAssetEnableDt" parameterType="Long">
+		select a.* from am_asset_enable_dt  a
+		where a.ilinkno = #{ilinkno} and a.idel = 0
+		order by a.dregt desc
+	</select>
+
+    <!-- 查询数量 -->
+    <select id="findCount" resultType="java.lang.Integer" >
+		select count(0)
+		from am_asset_enable_dt a
+		where a.idel = 0
+	</select>
+
+
+</mapper>

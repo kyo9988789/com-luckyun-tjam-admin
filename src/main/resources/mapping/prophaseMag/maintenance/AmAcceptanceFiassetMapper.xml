@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.prophaseMag.maintenance.mapper.AmAcceptanceFiassetMapper">
+	
+	<!-- 查询所有设备设施资产 -->
+    <select id="findAll" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmAcceptanceFiasset"
+    		parameterType="com.luckyun.tjam.prophaseMag.maintenance.param.AmAcceptanceFiassetParam">
+    	select a.indocno,a.sfcode,a.istrans,a.sfname,a.seqclassno,a.ilineid,a.sbrand_act as sbrandAct,a.sinslocationno_act as sinslocationnoAct,a.icheckuserid,a.ssuppliernm,a.iupdatestate,a.idatastate,
+    	a.slineendpost,a.slinestartpost,a.sproductnm_act as sproductnmAct,a.sspec_act as sspecAct,a.iqty_act as iqtyAct,a.imanagedeptid,a.imajorid,a.idutyid,a.idiststatus,a.idel from am_acceptance_fiasset a
+		left join am_arc_class c on c.sclassno = a.seqclassno
+		where a.idel = 0 and a.sparentno is null 
+		<if test="condition.seqclassno != null and condition.seqclassno != ''">
+             and exists (select 1 from am_arc_class d where instr('/'||d.sidcc||'/', '/'|| #{condition.seqclassno} ||'/')>0 and a.seqclassno = d.sclassno)
+        </if>
+        <!-- 查看的当前模块是管理员版还是责任人版，0 = 责任人版，未传表示是管理员版不用过滤数据，展示所有即可 -->
+        <if test="condition.iiscapadmin != null and condition.iiscapadmin == 0">
+        	and a.idutyid = #{condition.icuruserid} and (a.idiststatus = 0 or a.idiststatus = 1)
+        </if>
+        <if test="condition.igenevrfstateid != null and condition.igenevrfstateid == 0">
+           	and a.idatastate = 1 and a.iupdatestate is null  
+        </if>
+        <if test="condition.igenevrfstateid != null and condition.igenevrfstateid == 1">
+           	and (a.idatastate is null or a.idatastate = 0 or (a.idatastate = 1 and a.iupdatestate is not null)) 
+        </if>
+        <if test="condition.ihasSonInventory == 0">
+        	and not exists (select * from am_acceptance_fiasset d where a.sfcode = d.sparentno)
+        </if>
+        <if test="condition.ihasSonInventory == 1">
+        	and exists (select * from am_acceptance_fiasset d where a.sfcode = d.sparentno)
+        </if>
+		<if test="condition.indocnoList != null and condition.indocnoList.size()>0">
+			and a.indocno in
+			<foreach collection="condition.indocnoList" open="(" close=")" separator="," item="itpm">
+				#{itpm}
+			</foreach>
+		</if>
+		<!-- 管理员版通过创建时间倒序 -->
+		<if test="condition.iiscapadmin != null and condition.iiscapadmin == 0">
+           	order by a.ddisttime desc 
+        </if>
+        <!-- 责任人版通过分配时间倒序 -->
+		<if test="condition.iiscapadmin == null">
+			order by a.dregt desc  
+        </if>
+	</select>
+	
+	<!-- 查询单条设备设施资产 --> 
+	<select id="findOne" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmAcceptanceFiasset" parameterType="Long">
+		select a.* 
+		from am_acceptance_fiasset a
+		where a.indocno = #{indocno} and a.idel = 0 
+	</select>
+	
+	<!-- 通过上级资产编号查找组成清单 -->
+	<select id="findSonByIparent" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmAcceptanceFiasset" parameterType="String">
+		select a.* 
+		from am_acceptance_fiasset a
+		where a.sparentno = #{sfcode} and a.idel = 0
+	</select>
+	
+	<!-- 获取除当前条及子资产以外的所有资产编号 -->
+	<select id="findParentAssetnumIgnoreNeed" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmAcceptanceFiasset" parameterType="String">
+		select a.* from am_acceptance_fiasset a
+		where (a.sfcode != #{sfcode} or a.sfcode is null)
+		and (a.sparentno != #{sfcode} or a.sparentno is null)
+		order by a.sfcode asc
+	</select>
+	
+	<!-- 查找是否存在外部系统主键 -->
+	<select id="findPkeyValue" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmAcceptanceFiasset" parameterType="Long">
+		select a.* 
+		from am_acceptance_fiasset a
+		where a.indocno = #{indocno}
+	</select>
+	
+	<!-- 通过资产编号查询数据 -->
+	<select id="findBySassetnum" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmAcceptanceFiasset" parameterType="String">
+		select a.* 
+		from am_acceptance_fiasset a
+		where a.sfcode = #{sfcode} and a.idel = 0
+	</select>
+	
+	<!-- 查询所有"未生成核验计划明细"且"不是组成部分"的数据 -->
+	<select id="findAllHasNotGreVerification" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmAcceptanceFiasset"
+			parameterType="com.luckyun.tjam.prophaseMag.maintenance.param.AmAcceptanceFiassetParam">
+		select a.indocno,a.istrans,a.seqclassno,a.sfcode,a.sfname,a.sbrand_act as sbrandAct,a.sinslocationno_act as sinslocationnoAct,a.sspec_act as sspecAct from am_acceptance_fiasset a left join am_arc_class c on c.sclassno = a.seqclassno
+		where a.idel = 0 and a.sparentno is null and (a.idatastate is null or a.idatastate = 0)
+        <if test="condition.seqclassno != null and condition.seqclassno != ''">
+             and exists (select 1 from am_arc_class d where instr('/'||d.sidcc||'/', '/'|| #{condition.seqclassno} ||'/')>0 and a.seqclassno = d.sclassno)
+        </if>
+        order by a.dregt desc 
+	</select>
+
+	<select id="findAllDealtWith" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmAcceptanceFiasset">
+		select a.* from am_acceptance_fiasset a where iuploadstate is NULL
+
+	</select>
+
+	<select id="findUpAllDealtWith" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmAcceptanceFiasset">
+		select a.* from am_acceptance_fiasset a where iuploadstate is not NULL
+	</select>
+
+	<!-- 通过接口数据id查询数据 -->
+	<select id="findByIsourceid" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmAcceptanceFiasset">
+		select a.* from am_acceptance_fiasset a
+		where a.isourceid = #{isourceid} and a.isource = #{isource} and a.idel = 0
+	</select>
+	
+	<update id="updateIupdateState" parameterType="Long">
+		update am_acceptance_fiasset set iupdatestate = null where indocno = #{indocno}
+	</update>
+	
+	<!-- 查询未被引用的主资产数据 --> 
+	<select id="readAllHasNotQuoted" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmAcceptanceFiasset">
+		select a.indocno,a.sfcode,a.sfname,a.seqclassno,a.sparentno,a.sspec_act as sspecAct,a.imanagedeptid,a.idutyid,a.iquotestate,a.sownerunit,
+		a.iprice,a.ilineid,a.sbrand_act as sbrandAct,a.sinslocationno_act as sinslocationnoAct,a.scostsource,a.idel from am_acceptance_fiasset a
+		where a.idel = 0 and a.sparentno is null and (a.iquotestate is null or a.iquotestate = 0) 
+	</select>
+	
+</mapper>

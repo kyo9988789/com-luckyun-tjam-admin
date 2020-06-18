@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.prophaseMag.acceptance.mapper.InfL1InventoryMapper">
+	
+	<!-- 查询所有移交计划数据 -->
+	<select id="findAllByAssetnum" resultType="com.luckyun.tjam.prophaseMag.acceptance.model.InfL1Inventory" parameterType="String">
+		select a.* 
+		from inf_l1_inventory a 
+		where  a.sfcode = #{sfcode}
+		order by a.createdate desc
+	</select>
+
+	<select id="findByAssetnum" resultType="com.luckyun.tjam.prophaseMag.acceptance.model.InfL1Inventory">
+		select * from INF_L1_INVENTORY where SFCODE = #{sfcode}
+	</select>
+
+	<update id="updateIhascopied" parameterType="com.luckyun.tjam.prophaseMag.acceptance.model.InfL1Inventory">
+		UPDATE INF_L1_INVENTORY set ICOPYSTATE = #{condition.icopystate} where INDOCNO = #{condition.indocno}
+	</update>
+	
+	<select id="findAllByTransfernum" resultType="com.luckyun.tjam.prophaseMag.acceptance.model.InfL1Inventory" parameterType="String">
+		SELECT a.* FROM inf_l1_inventory a 
+		left join inf_l1_plan_detailed b on a.sfcode = b.sfcode
+		left join inf_plan c on b.stransferno = c.stransferno
+		where c.stransferno = #{stransferno}
+	</select>
+
+	<update id="updateIupdateState" parameterType="Long">
+		update INF_L1_INVENTORY set iupdatestate = null where indocno = #{indocno}
+	</update>
+
+</mapper>

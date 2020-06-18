@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.mtAssetMag.amTranPlan.mapper.AmTransferPlanMapper">
+
+    <!-- 查询所有待分摊项 -->
+    <select id="findAll" resultType="com.luckyun.tjam.mtAssetMag.amTranPlan.model.AmTransferPlan"
+            parameterType="com.luckyun.tjam.mtAssetMag.amTranPlan.param.AmTransferPlanParam">
+        select a.indocno,a.sfcode,a.itransferstate,a.sfname,a.itransferto,a.ilineid,a.dtransfer,a.icreatedeptid
+        ,a.dregt,a.sregid,a.snote,count(b.indocno) as iqty,a.idel from am_transfer_plan a
+        LEFT JOIN AM_TRANSFER_PLAN_DT b on a.indocno = b.ilinkno
+        where a.idel = 0 and b.idel = 0
+        group by a.indocno,a.sfcode,a.itransferstate,a.sfname,
+        a.itransferto,a.ilineid,a.dtransfer,a.icreatedeptid,a.dregt,a.sregid,a.snote,
+        a.idel
+        <if test="condition.sname != null and condition.sname != ''">
+            and (a.sfname like '%${condition.sname}%' or a.sfcode like '%${condition.sname}%')
+        </if>
+        <if test="condition.itransferstate != null">
+            and a.itransferstate = #{condition.itransferstate}
+        </if>
+        <if test="condition.ilineid != null">
+            and a.ilineid = #{condition.ilineid}
+        </if>
+        <if test="condition.itransferto != null">
+            and a.itransferto = #{condition.itransferto}
+        </if>
+        <if test="condition.dreleasestart != null and condition.dreleaseend != null">
+            and a.dtransfer between #{condition.dreleasestart} and #{condition.dreleaseend}
+        </if>
+        <if test="condition.indocnoList != null and condition.indocnoList.size()>0">
+            and a.indocno in
+            <foreach collection="condition.indocnoList" open="(" close=")" separator="," item="itpm">
+                #{itpm}
+            </foreach>
+        </if>
+        order by a.dregt desc
+    </select>
+
+    <!-- 查询单条 -->
+    <select id="findOne" resultType="com.luckyun.tjam.mtAssetMag.amTranPlan.model.AmTransferPlan" parameterType="Long">
+		select a.*
+		from am_transfer_plan a
+		where a.indocno = #{indocno} and a.idel = 0
+	</select>
+
+    <!-- 查询当前天最大编号 -->
+    <select id="findMaxSappmtno" resultType="com.luckyun.tjam.mtAssetMag.amTranPlan.model.AmTransferPlan"
+            parameterType="com.luckyun.tjam.mtAssetMag.amTranPlan.param.AmTransferPlanParam">
+		select a.sfcode
+		from am_transfer_plan a
+		where a.idel = 0 and a.sfcode like '%${condition.sfcode}%' order by a.sfcode desc
+	</select>
+
+    <!-- 查询当前天名称 -->
+    <select id="findMaxSname" resultType="com.luckyun.tjam.mtAssetMag.amTranPlan.model.AmTransferPlan"
+            parameterType="com.luckyun.tjam.mtAssetMag.amTranPlan.param.AmTransferPlanParam">
+        select a.sfname from am_transfer_plan a
+        where a.idel = 0 and a.sfname like '%${condition.sfname}%' order by a.sfname desc
+    </select>
+
+    <select id="findByDregt" resultType="Long">
+        select max(indocno) from am_transfer_plan where to_char(dregt,'yyyy/MM/dd') = to_char(sysdate,'yyyy/MM/dd')
+    </select>
+
+</mapper>

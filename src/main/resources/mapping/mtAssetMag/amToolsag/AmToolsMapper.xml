@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.mtAssetMag.amToolsag.mapper.AmToolsMapper">
+
+    <!-- 查询所有待分摊项 -->
+    <select id="findAll" resultType="com.luckyun.tjam.mtAssetMag.amToolsag.model.AmTools"
+            parameterType="com.luckyun.tjam.mtAssetMag.amToolsag.param.AmToolsParam">
+        select a.indocno,a.sfcode,a.sfname,a.ilineid,a.iamarcclassid,a.sbrand,a.sspec,seqclassno
+        ,a.sunit,a.iqty,a.imanagedeptid,a.smajornm,a.idutyid,a.sinsarea,a.sinspos,a.idel from am_tools a
+        left join am_arc_class e on e.sclassno = a.seqclassno
+        where a.idel = 0
+        <if test="condition.imanagedeptid != null and condition.imanagedeptid != ''">
+            and a.imanagedeptid = #{condition.imanagedeptid}
+        </if>
+        <if test="condition.seqclassno != null and condition.seqclassno != ''">
+            and exists (select 1 from am_arc_class f where instr('/'||f.sidcc||'/', '/'|| #{condition.seqclassno} ||'/')>0 and a.seqclassno = f.sclassno)
+        </if>
+        <if test="condition.sname != null and condition.sname != ''">
+            and (a.sfname like '%${condition.sname}%' or a.sfcode like '%${condition.sname}%')
+        </if>
+        <if test="condition.ilineid != null">
+            and a.ilineid = #{condition.ilineid}
+        </if>
+        <if test="condition.smajornm != null and condition.smajornm != ''">
+            and a.smajornm = #{condition.smajornm}
+        </if>
+        <if test="condition.idutyid != null and condition.idutyid != ''">
+            and a.idutyid = #{condition.idutyid}
+        </if>
+        <if test="condition.sbrand != null and condition.sbrand != ''">
+            and a.sbrand = #{condition.sbrand}
+        </if>
+        <if test="condition.sspec != null and condition.sspec != ''">
+            and a.sspec = #{condition.sspec}
+        </if>
+        <if test="condition.sinsarea != null and condition.sinsarea != ''">
+            and a.sinsarea = #{condition.sinsarea}
+        </if>
+        <if test="condition.sinspos != null and condition.sinspos != ''">
+            and a.sinspos = #{condition.sinspos}
+        </if>
+        <if test="condition.indocnoList != null and condition.indocnoList.size()>0">
+            and a.indocno in
+            <foreach collection="condition.indocnoList" open="(" close=")" separator="," item="itpm">
+                #{itpm}
+            </foreach>
+        </if>
+        order by a.dregt desc
+    </select>
+
+    <!-- 查询单条 -->
+    <select id="findOne" resultType="com.luckyun.tjam.mtAssetMag.amToolsag.model.AmTools" parameterType="Long">
+		select a.*
+		from am_tools a
+		where a.indocno = #{indocno} and a.idel = 0
+	</select>
+
+
+</mapper>

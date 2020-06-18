@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.prophaseMag.acceptance.mapper.InfSparesPlanMapper">
+	
+	<!-- 查询所有备品备件移交计划主表数据 -->
+	<select id="findAll" resultType="com.luckyun.tjam.prophaseMag.acceptance.model.InfSparesPlan">
+		select a.* 
+		from inf_spares_plan a 
+		where a.idel = 0 order by a.dregt desc
+	</select>
+	
+	<!-- 查询单条备品备件移交计划主表数据的明细 --> 
+    <select id="findOne" resultType="com.luckyun.tjam.prophaseMag.acceptance.model.InfSparesPlan" parameterType="Long">
+    	select a.* 
+		from inf_spares_plan a
+	    where a.idel = 0 and a.indocno = #{indocno}
+	    order by a.dregt desc
+	</select>
+
+	<select id="findByIsource" parameterType="Integer" resultType="com.luckyun.tjam.prophaseMag.acceptance.model.InfSparesPlan">
+		select * from INF_SPARES_PLAN where ISOURCE = #{isource}
+	</select>
+	
+</mapper>

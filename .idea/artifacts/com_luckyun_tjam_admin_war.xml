@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="com-luckyun-tjam-admin:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="com-luckyun-tjam-admin-3.4.9.war">
+      <element id="artifact" artifact-name="com-luckyun-tjam-admin:war exploded" />
+    </root>
+  </artifact>
+</component>

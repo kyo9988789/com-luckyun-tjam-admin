@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.prophaseMag.verification.mapper.AmWaitAppmtMapper">
+
+    <!-- 查询所有待分摊项 -->
+    <select id="findAll" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmWaitAppmt"
+            parameterType="com.luckyun.tjam.prophaseMag.verification.param.AmWaitAppmtParam">
+        select a.indocno,a.sappmtno,a.idealstatus,a.sappmtpronm,a.sprono,a.spronm,a.scontno,a.scontnm,a.icontmoney,
+        a.iappmtmoney,a.isource,a.ilineid,a.ideptid,a.sregid,a.snote,a.dregt,a.iquotestate,a.idel from am_wait_appmt a where a.idel = 0 order by a.dregt desc
+    </select>
+
+	<!-- 查询未被资产价值分摊选中的待分摊项：iuotestate != 1 -->
+    <select id="readAllHasNotChoiced" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmWaitAppmt">
+        select a.indocno,a.sappmtno,a.idealstatus,a.sappmtpronm,a.sprono,a.spronm,a.scontno,a.scontnm,a.icontmoney,
+        a.iappmtmoney,a.isource,a.ilineid,a.ideptid,a.sregid,a.snote,a.dregt,a.iquotestate,a.idel from am_wait_appmt a 
+        where a.idel = 0 and (a.iquotestate is null or a.iquotestate != 1) and a.idealstatus = 0 order by a.dregt desc
+    </select>
+
+    <!-- 查询单条 -->
+    <select id="findOne" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmWaitAppmt" parameterType="Long">
+		select a.* from am_wait_appmt a
+		where a.indocno = #{indocno} and a.idel = 0
+	</select>
+
+    <!-- 查询当前天最大编号 -->
+    <select id="findMaxSappmtno" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmWaitAppmt"
+            parameterType="com.luckyun.tjam.prophaseMag.verification.param.AmWaitAppmtParam">
+		select a.sappmtno from am_wait_appmt a
+		where a.idel = 0 and a.sappmtno like '%${condition.sappmtno}%' order by a.sappmtno desc
+	</select>
+
+	<update id="updateIquotestate" parameterType="Long">
+		update am_wait_appmt set iquotestate = 1 where indocno = #{indocno}
+	</update>
+
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.prophaseMag.verification.mapper.AmWorthAppmtProMapper">
+
+    <!-- 查询所有待分摊项 -->
+    <select id="findAll" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmWorthAppmtPro"
+            parameterType="com.luckyun.tjam.prophaseMag.verification.param.AmWorthAppmtProParam">
+        select a.* from am_worth_appmt_pro a where a.idel = 0 order by a.dregt desc
+    </select>
+
+    <!-- 查询单条 -->
+    <select id="findOne" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmWorthAppmtPro" parameterType="Long">
+		select a.*
+		from am_worth_appmt_pro a
+		where a.indocno = #{indocno} and a.idel = 0
+	</select>
+
+
+    <!-- 通过外键查询所有明细 -->
+    <select id="findAllByIlinkno" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmWorthAppmtPro"
+            parameterType="Long">
+    	select a.ISOURCEID,a.ILINKNO,a.IAPPMTTYPE,a.SAPPMTNO,a.IDEALSTATUS,a.SAPPMTPRONM,a.SPRONO,a.SPRONM,a.SCONTNO,
+    	a.SCONTNM,a.ICONTMONEY,a.IAPPMTMONEY,a.ISOURCE,a.ILINEID,a.SNOTE,a.IDEPTID,a.idel,a.SREGID,a.DREGT,a.ISTATE,
+    	a.SMODID,a.SMODNM,a.DMODT,a.indocno from am_worth_appmt_pro a
+		where a.idel = 0 and a.ilinkno = #{ilinkno}
+		order by a.dregt desc
+	</select>
+
+
+</mapper>

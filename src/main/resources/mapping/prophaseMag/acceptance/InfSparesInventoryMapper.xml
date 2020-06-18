@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.prophaseMag.acceptance.mapper.InfSparesInventoryMapper">
+	
+	<!-- 通过外键获取所有备品备件明细：inf_ibillid -->
+	<select id="findAllByInfibillid" resultType="com.luckyun.tjam.prophaseMag.acceptance.model.InfSparesInventory" parameterType="Long">
+		select a.* 
+		from inf_spares_inventory a 
+		where a.idel = 0
+		and a.ilinkno = #{ilinkno}
+		order by a.dregt desc
+	</select>
+
+	<select id="findAllByIhascopied" resultType="com.luckyun.tjam.prophaseMag.acceptance.model.InfSparesInventory">
+		select * from INF_SPARES_INVENTORY where ICOPYSTATE is NULL
+	</select>
+	
+	<select id="findAllByIhascopiedAndIupdateState" resultType="com.luckyun.tjam.prophaseMag.acceptance.model.InfSparesInventory">
+		select * from INF_SPARES_INVENTORY where ICOPYSTATE is not NULL and iupdatestate is not null
+	</select>
+
+	<update id="updateIhascopied" parameterType="com.luckyun.tjam.prophaseMag.acceptance.model.InfSparesInventory">
+		UPDATE INF_SPARES_INVENTORY set ICOPYSTATE = #{condition.icopystate},ILINKNO = #{condition.ilinkno} where INDOCNO = #{condition.indocno}
+	</update>
+
+	<update id="updateIupdateState" parameterType="Long">
+		update INF_SPARES_INVENTORY set iupdatestate = null where indocno = #{indocno}
+	</update>
+
+</mapper>

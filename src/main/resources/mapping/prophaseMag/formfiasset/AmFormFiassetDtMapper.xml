@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.prophaseMag.formfiasset.mapper.AmFormFiassetDtMapper">
+
+    <select id="findAllByIlinkno" parameterType="Long"
+            resultType="com.luckyun.tjam.prophaseMag.formfiasset.entity.AmFormFiassetDt">
+        select * from AM_FORM_FIASSET_DT a
+          LEFT join AM_FORM_FIASSET b
+            on a.ilinkno = b.INDOCNO where a.idel = 0 and b.indocno = #{ilinkno}
+    </select>
+</mapper>

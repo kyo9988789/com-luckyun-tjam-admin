@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.mtAssetMag.amDurableLowValue.mapper.AmDurLvConsumableMapper">
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="com.luckyun.tjam.mtAssetMag.amDurableLowValue.model.AmDurLvConsumable"
+            parameterType="com.luckyun.tjam.mtAssetMag.amDurableLowValue.param.AmDurLvConsumableParam">
+        select a.indocno,a.sfcode,a.sfname,a.ilineid,a.iamarcclassid,a.sbrandnm,a.sspec,a.iprice,seqclassno
+        ,a.dpurchase,a.iaccountdeptid,a.idutyid,a.sinsarea,a.sinspos,a.sposroom,a.snote,a.dregt,a.idel from am_dur_lv_consumable a
+        left join am_arc_class e on e.sclassno = a.seqclassno
+        where a.idel = 0
+        <if test="condition.seqclassno != null and condition.seqclassno != ''">
+            and exists (select 1 from am_arc_class f where instr('/'||f.sidcc||'/', '/'|| #{condition.seqclassno} ||'/')>0 and a.seqclassno = f.sclassno)
+        </if>
+        <if test="condition.sname != null and condition.sname != ''">
+            and (a.sfname like '%${condition.sname}%' or a.sfcode like '%${condition.sname}%')
+        </if>
+        <if test="condition.ilineid != null">
+            and a.ilineid = #{condition.ilineid}
+        </if>
+        <if test="condition.sbrandnm != null and condition.sbrandnm != ''">
+            and a.sbrandnm = #{condition.sbrandnm}
+        </if>
+        <if test="condition.idutyid != null and condition.idutyid != ''">
+            and a.idutyid = #{condition.idutyid}
+        </if>
+        <if test="condition.sspec != null and condition.sspec != ''">
+            and a.sspec = #{condition.sspec}
+        </if>
+        <if test="condition.sinsarea != null and condition.sinsarea != ''">
+            and a.sinsarea = #{condition.sinsarea}
+        </if>
+        <if test="condition.sinspos != null and condition.sinspos != ''">
+            and a.sinspos = #{condition.sinspos}
+        </if>
+        <if test="condition.sposroom != null and condition.sposroom != ''">
+            and a.sposroom = #{condition.sposroom}
+        </if>
+        <if test="condition.indocnoList != null and condition.indocnoList.size()>0">
+            and a.indocno in
+            <foreach collection="condition.indocnoList" open="(" close=")" separator="," item="itpm">
+                #{itpm}
+            </foreach>
+        </if>
+        order by a.dregt desc
+    </select>
+
+    <!-- 查询单条 -->
+    <select id="findOne" resultType="com.luckyun.tjam.mtAssetMag.amDurableLowValue.model.AmDurLvConsumable" parameterType="Long">
+		select a.*
+		from am_dur_lv_consumable a
+		where a.indocno = #{indocno} and a.idel = 0
+	</select>
+
+
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.prophaseMag.maintenance.mapper.AmAcceptanceSpareMapper">
+	
+	<!-- 查询所有备品备件资产 0否1是-->
+    <select id="findAll" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmAcceptanceSpare"
+    		parameterType="com.luckyun.tjam.prophaseMag.maintenance.param.AmAcceptanceSpareParam">
+		select a.indocno,a.ssparenm,a.sspareno,a.istrans,a.idiststatus,a.sspec,a.sunit,a.ssuppliernm,a.iprice,a.iqty,a.imoney,a.idatastate,
+		a.imajorid,a.sassetno,a.imanagedeptid,a.idutyid,a.icheckuserid,a.idel from am_acceptance_spare a where a.idel = 0 
+		<!-- 查看的当前模块是管理员版还是责任人版，0 = 责任人版，未传表示是管理员版不用过滤数据，展示所有即可 -->
+        <if test="condition.iiscapadmin != null and condition.iiscapadmin == 0">
+        	and a.idutyid = #{condition.icuruserid} and (a.idiststatus = 0 or a.idiststatus = 1)
+        </if>
+        <if test="condition.igenevrfstateid != null and condition.igenevrfstateid == 0">
+           	and a.idatastate = 1 and a.iupdatestate is null  
+        </if>
+        <if test="condition.igenevrfstateid != null and condition.igenevrfstateid == 1">
+           	and (a.idatastate is null or a.idatastate = 0 or (a.idatastate = 1 and a.iupdatestate is not null)) 
+        </if>
+		<if test="condition.indocnoList != null and condition.indocnoList.size()>0">
+			and a.indocno in
+			<foreach collection="condition.indocnoList" open="(" close=")" separator="," item="itpm">
+				#{itpm}
+			</foreach>
+		</if>
+		<!-- 管理员版通过创建时间倒序 -->
+		<if test="condition.iiscapadmin != null and condition.iiscapadmin == 0">
+           	order by a.ddisttime desc 
+        </if>
+        <!-- 责任人版通过分配时间倒序 -->
+		<if test="condition.iiscapadmin == null">
+			order by a.dregt desc  
+        </if>
+	</select>
+	
+	<!-- 查询单条备品备件资产 --> 
+	<select id="findOne" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmAcceptanceSpare" parameterType="Long">
+		select a.* from am_acceptance_spare a
+		where a.indocno = #{indocno} and a.idel = 0 
+	</select>
+	
+	<!-- 查询所有可生成核验计划的备品备件资产 -->
+	<select id="findAllHasNotGreVerification" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmAcceptanceSpare"
+			parameterType="com.luckyun.tjam.prophaseMag.maintenance.param.AmAcceptanceSpareParam">
+		select a.indocno,a.ssparenm,a.sspareno,a.istrans,a.ssuppliernm,a.sspec,a.sunit,a.iqty from am_acceptance_spare a 
+		where a.idel = 0 and (a.idatastate is null or a.idatastate = 0) order by a.dregt desc 
+	</select>
+	
+	<!-- 通过资产编号查询数据 -->
+	<select id="findBySspareno" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmAcceptanceSpare" parameterType="String">
+		select a.* 
+		from am_acceptance_spare a
+		where a.sspareno = #{sspareno} and a.idel = 0
+	</select>
+
+	<select id="findByDregt" resultType="Long">
+		select max(indocno) from am_acceptance_spare where to_char(dregt,'yyyy/MM/dd') = to_char(sysdate,'yyyy/MM/dd')
+	</select>
+	
+	<!-- 通过接口数据id查询数据 -->
+	<select id="findByIsourceid" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmAcceptanceSpare" parameterType="Long">
+		select a.* from am_acceptance_spare a
+		where a.isourceid = #{isourceid} and a.idel = 0
+	</select>
+	
+	<update id="updateIupdateState" parameterType="Long">
+		update am_acceptance_spare set iupdatestate = null where indocno = #{indocno}
+	</update>
+	
+</mapper>

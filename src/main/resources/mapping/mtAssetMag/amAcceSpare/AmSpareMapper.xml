@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.mtAssetMag.amAcceSpare.mapper.AmSpareMapper">
+
+    <!-- 查询所有待分摊项 -->
+    <select id="findAll" resultType="com.luckyun.tjam.mtAssetMag.amAcceSpare.model.AmSpare"
+            parameterType="com.luckyun.tjam.mtAssetMag.amAcceSpare.param.AmSpareParam">
+        select a.indocno,a.sfcode,a.sfname,a.ilineid,a.iamarcclassid,a.sassetno,a.sspec,a.sunit,a.imoney,a.iqty,a.imanagedeptid
+        ,a.smajornm,a.idutyid,a.ssuppliernm,a.iprice,a.idel from am_spare a
+        left join am_arc_class e on e.sclassno = a.iamarcclassid
+        where a.idel = 0
+        <if test="condition.imanagedeptid != null and condition.imanagedeptid != ''">
+            and a.imanagedeptid = #{condition.imanagedeptid}
+        </if>
+        <if test="condition.sname != null and condition.sname != ''">
+            and (a.sfname like '%${condition.sname}%' or a.sfcode like '%${condition.sname}%')
+        </if>
+        <if test="condition.ilineid != null">
+            and a.ilineid = #{condition.ilineid}
+        </if>
+        <if test="condition.smajornm != null and condition.smajornm != ''">
+            and a.smajornm = #{condition.smajornm}
+        </if>
+        <if test="condition.idutyid != null and condition.idutyid != ''">
+            and a.idutyid = #{condition.idutyid}
+        </if>
+        <if test="condition.sspec != null and condition.sspec != ''">
+            and a.sspec = #{condition.sspec}
+        </if>
+        <if test="condition.ssuppliernm != null and condition.ssuppliernm != ''">
+            and a.ssuppliernm = #{condition.ssuppliernm}
+        </if>
+        <if test="condition.sassetno != null and condition.sassetno != ''">
+            and a.sassetno = #{condition.sassetno}
+        </if>
+        <if test="condition.iamarcclassid != null and condition.iamarcclassid != ''">
+            and exists (select 1 from am_arc_class f where instr('/'||f.sidcc||'/', '/'|| #{condition.iamarcclassid} ||'/')>0 and a.seqclassno = f.sclassno)
+        </if>
+        <if test="condition.indocnoList != null and condition.indocnoList.size()>0">
+            and a.indocno in
+            <foreach collection="condition.indocnoList" open="(" close=")" separator="," item="itpm">
+                #{itpm}
+            </foreach>
+        </if>
+        order by a.dregt desc
+    </select>
+
+    <!-- 查询单条 -->
+    <select id="findOne" resultType="com.luckyun.tjam.mtAssetMag.amAcceSpare.model.AmSpare" parameterType="Long">
+		select a.*
+		from am_spare a
+		where a.indocno = #{indocno} and a.idel = 0
+	</select>
+
+
+</mapper>

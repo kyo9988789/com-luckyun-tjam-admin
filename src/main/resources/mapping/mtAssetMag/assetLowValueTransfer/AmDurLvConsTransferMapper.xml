@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.mtAssetMag.assetLowValueTransfer.mapper.AmDurLvConsTransferMapper">
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="com.luckyun.tjam.mtAssetMag.assetLowValueTransfer.model.AmDurLvConsTransfer"
+            parameterType="com.luckyun.tjam.mtAssetMag.assetLowValueTransfer.param.AmDurLvConsTransferParam">
+        select a.indocno,a.sfcode,a.sfname,a.iapprovalstate,a.ideptid,a.sregid,a.snote,a.ilineid ,a.dregt from am_dur_lv_cons_transfer a
+        where a.idel = 0
+        order by a.dregt desc
+    </select>
+
+    <!-- 查询单条 -->
+    <select id="findOne" resultType="com.luckyun.tjam.mtAssetMag.assetLowValueTransfer.model.AmDurLvConsTransfer" parameterType="Long">
+        select a.*
+        from am_dur_lv_cons_transfer a
+        where a.indocno = #{indocno} and a.idel = 0
+    </select>
+
+    <!-- 查询当前天最大编号 -->
+    <select id="findMaxSappmtno" resultType="com.luckyun.tjam.mtAssetMag.assetLowValueTransfer.model.AmDurLvConsTransfer"
+            parameterType="com.luckyun.tjam.mtAssetMag.assetLowValueTransfer.param.AmDurLvConsTransferParam">
+        select a.sfcode from am_dur_lv_cons_transfer a
+        where a.idel = 0 and a.sfcode like '%${condition.sfcode}%' order by a.sfcode desc
+    </select>
+
+
+</mapper>

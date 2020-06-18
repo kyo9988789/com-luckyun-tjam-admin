@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.mtAssetMag.amAssetEnable.mapper.AmAssetEnableMapper">
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="com.luckyun.tjam.mtAssetMag.amAssetEnable.model.AmAssetEnable"
+            parameterType="com.luckyun.tjam.mtAssetMag.amAssetEnable.param.AmAssetEnableParam">
+        select a.indocno,a.sfcode,a.sfname,a.iapprovalstate,a.ideptid,a.sregid,a.dregt,a.snote
+        ,count(b.indocno) as iqty,a.ilineid,a.idel from am_asset_enable a
+        LEFT JOIN AM_ASSET_ENABLE_DT b on a.indocno = b.ilinkno and b.idel =0
+        where a.idel = 0
+         group by a.indocno,a.sfcode,a.sfname,a.iapprovalstate,
+          a.ideptid,a.sregid,a.snote,a.ilineid,a.dregt,a.idel
+    </select>
+
+    <!-- 查询单条 -->
+    <select id="findOne" resultType="com.luckyun.tjam.mtAssetMag.amAssetEnable.model.AmAssetEnable" parameterType="Long">
+		select a.*
+		from am_asset_enable a
+		where a.indocno = #{indocno} and a.idel = 0
+	</select>
+
+
+</mapper>

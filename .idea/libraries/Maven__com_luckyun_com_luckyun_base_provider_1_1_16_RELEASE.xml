@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.luckyun:com-luckyun-base-provider:1.1.16-RELEASE">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/luckyun/com-luckyun-base-provider/1.1.16-RELEASE/com-luckyun-base-provider-1.1.16-RELEASE.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/luckyun/com-luckyun-base-provider/1.1.16-RELEASE/com-luckyun-base-provider-1.1.16-RELEASE-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/luckyun/com-luckyun-base-provider/1.1.16-RELEASE/com-luckyun-base-provider-1.1.16-RELEASE-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

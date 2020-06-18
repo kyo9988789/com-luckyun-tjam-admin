@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.prophaseMag.acceptance.mapper.InfL1PlanDetailedMapper">
+	
+	<!-- 通过移交计划编号查询计划明细 -->
+	<select id="findAllByTransfernum" resultType="com.luckyun.tjam.prophaseMag.acceptance.model.InfL1PlanDetailed" parameterType="String">
+		select a.* 
+		from inf_l1_plan_detailed a 
+		where a.idel = 0
+		and a.stransferno = #{stransferno}
+		order by a.dregt desc
+	</select>
+
+	<select id="findAllByIhascopied" resultType="com.luckyun.tjam.prophaseMag.acceptance.model.InfL1PlanDetailed">
+		select a.* from INF_L1_PLAN_DETAILED a
+		LEFT JOIN INF_L1_INVENTORY b
+		on a.SFCODE = b.SFCODE where a.ICOPYSTATE is NULL
+	</select>
+
+	<!-- 查找已下推实物资产表但发生变更的接口数据 -->
+	<select id="findAllByIhascopiedAndIupdateState" resultType="com.luckyun.tjam.prophaseMag.acceptance.model.InfL1PlanDetailed">
+		select a.* from INF_L1_PLAN_DETAILED a
+		LEFT JOIN INF_L1_INVENTORY b
+		on a.SFCODE = b.SFCODE where a.ICOPYSTATE is not null and a.iupdatestate is not null  
+	</select>
+
+	<update id="updateIhascopied" parameterType="com.luckyun.tjam.prophaseMag.acceptance.model.InfL1PlanDetailed">
+		UPDATE INF_L1_PLAN_DETAILED set ICOPYSTATE = #{condition.icopystate} where INDOCNO = #{condition.indocno}
+	</update>
+	
+	<update id="updateIupdateState" parameterType="Long">
+		update INF_L1_PLAN_DETAILED set iupdatestate = null where indocno = #{indocno}
+	</update>
+	
+</mapper>

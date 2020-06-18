@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.mtAssetMag.asledag.mapper.AmBasicAnnexMapper">
+
+
+    <!-- 通过外键查询所有明细图片 -->
+    <select id="findAllByIbillid" resultType="com.luckyun.tjam.mtAssetMag.asledag.model.AmBasicAnnex"
+            parameterType="Long">
+    	select a.* from am_basic_annex a
+		where  a.ilinkno = #{ilinkno}
+		order by a.dregt desc
+	</select>
+
+	<!-- 通过外键查询所有明细图片 -->
+	<select id="findAllByIclassid" resultType="com.luckyun.tjam.mtAssetMag.asledag.model.AmBasicAnnex"
+			parameterType="Long">
+    	select a.* from am_basic_annex a
+		where a.iclassid = 0 and a.ilinkno = #{ilinkno}
+		order by a.dregt desc
+	</select>
+
+	<!-- 通过外键查询所有明细附件 -->
+	<select id="findAllByIclassidfuji" resultType="com.luckyun.tjam.mtAssetMag.asledag.model.AmBasicAnnex"
+			parameterType="Long">
+    	select a.* from am_basic_annex a
+		where a.iclassid = 1 and a.ilinkno = #{ilinkno}
+		order by a.dregt desc
+	</select>
+
+
+</mapper>

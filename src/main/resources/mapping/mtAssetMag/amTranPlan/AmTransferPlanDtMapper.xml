@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.mtAssetMag.amTranPlan.mapper.AmTransferPlanDtMapper">
+
+
+    <!-- 通过外键查询所有 -->
+    <select id="findAllByIlinkno" resultType="com.luckyun.tjam.mtAssetMag.amTranPlan.model.AmTransferPlanDt" parameterType="Long">
+		   select * from am_transfer_plan_dt a
+          inner join am_transfer_plan b
+            on a.ilinkno = b.indocno and b.indocno = #{ilinkno}
+            where a.idel = 0
+	</select>
+
+    <!-- 查询单条 -->
+    <select id="findOne" resultType="com.luckyun.tjam.mtAssetMag.amTranPlan.model.AmTransferPlanDt" parameterType="Long">
+		select a.*
+		from am_transfer_plan_dt a
+		where a.indocno = #{indocno} and a.idel = 0
+	</select>
+
+
+    <!-- 查询单条 -->
+    <select id="findOne1" resultType="com.luckyun.tjam.mtAssetMag.amTranPlan.model.AmTransferPlanDt" parameterType="Long">
+        select a.*
+        from am_transfer_plan_dt a
+        where a.sfcode = #{sfcode} and a.idel = 0
+    </select>
+</mapper>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.mtAssetMag.amAssetLeave.mapper.AmAssetLeaveMapper">
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="com.luckyun.tjam.mtAssetMag.amAssetLeave.model.AmAssetLeave"
+            parameterType="com.luckyun.tjam.mtAssetMag.amAssetLeave.param.AmAssetLeaveParam">
+        select a.indocno,a.sfcode,a.sfname,a.iapprovalstate,a.ideptid,a.sregid,a.snote,a.ileavetypeid
+        ,a.ilineid,count(b.indocno) as iqty,a.idel,a.dregt,a.sregnm from am_asset_leave a
+        LEFT JOIN AM_ASSET_LEAVE_DT b on a.indocno = b.ilinkno and b.idel =0
+        where a.idel = 0
+        group by a.indocno,a.sfcode,a.sfname,a.iapprovalstate,
+          a.ideptid,a.sregid,a.snote,a.ileavetypeid,a.ilineid,a.idel,a.dregt,a.sregnm
+    </select>
+
+    <!-- 查询单条 -->
+    <select id="findOne" resultType="com.luckyun.tjam.mtAssetMag.amAssetLeave.model.AmAssetLeave" parameterType="Long">
+        select a.*
+        from am_asset_leave a
+        where a.indocno = #{indocno} and a.idel = 0
+    </select>
+
+
+    <!-- 查询当前天最大编号 -->
+    <select id="findMaxSappmtno" resultType="com.luckyun.tjam.mtAssetMag.amAssetLeave.model.AmAssetLeave"
+            parameterType="com.luckyun.tjam.mtAssetMag.amAssetLeave.param.AmAssetLeaveParam">
+        select a.sfcode from am_asset_leave a
+        where a.idel = 0 and a.sfcode like '%${condition.sfcode}%' order by a.sfcode desc
+    </select>
+
+    <!-- 查询当前天最大编号 -->
+    <select id="findMaxSname" resultType="com.luckyun.tjam.mtAssetMag.amAssetLeave.model.AmAssetLeave"
+            parameterType="com.luckyun.tjam.mtAssetMag.amAssetLeave.param.AmAssetLeaveParam">
+        select a.sfname from am_asset_leave a
+        where a.idel = 0 and a.sfname like '%${condition.sfname}%' order by a.sfname desc
+    </select>
+
+
+</mapper>

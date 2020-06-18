@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.mtAssetMag.assetTranMag.mapper.AmAssetTransferMapper">
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="com.luckyun.tjam.mtAssetMag.assetTranMag.model.AmAssetTransfer"
+            parameterType="com.luckyun.tjam.mtAssetMag.assetTranMag.param.AmAssetTransferParam">
+        select a.indocno,a.sfcode,a.sfname,a.iapprovalstate,a.ideptid,a.sregid,a.snote
+        ,count(b.indocno) as iqty,a.ilineid ,a.dregt from am_asset_transfer a
+        LEFT JOIN AM_ASSET_TRANSFER_DT b on a.indocno = b.ilinkno and b.idel =0
+        where a.idel = 0
+        group by a.indocno,a.sfcode,a.sfname,a.iapprovalstate,
+          a.ideptid,a.sregid,a.snote,a.ilineid,a.dregt,a.idel
+    </select>
+
+    <!-- 查询单条 -->
+    <select id="findOne" resultType="com.luckyun.tjam.mtAssetMag.assetTranMag.model.AmAssetTransfer" parameterType="Long">
+		select a.*
+		from am_asset_transfer a
+		where a.indocno = #{indocno} and a.idel = 0
+	</select>
+
+    <!-- 查询数量 -->
+    <select id="findCount" resultType="java.lang.Integer" >
+		select count(0)
+		from am_asset_transfer a
+		where a.idel = 0
+	</select>
+
+    <!-- 查询当前天最大编号 -->
+    <select id="findMaxSappmtno" resultType="com.luckyun.tjam.mtAssetMag.assetTranMag.model.AmAssetTransfer"
+            parameterType="com.luckyun.tjam.mtAssetMag.assetTranMag.param.AmAssetTransferParam">
+        select a.sfcode from am_asset_transfer a
+        where a.idel = 0 and a.sfcode like '%${condition.sfcode}%' order by a.sfcode desc
+    </select>
+
+</mapper>

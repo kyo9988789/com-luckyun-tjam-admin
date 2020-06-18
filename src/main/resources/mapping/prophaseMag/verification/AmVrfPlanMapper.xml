@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.prophaseMag.verification.mapper.AmVrfPlanMapper">
+	
+	<!-- 查询所有设备设施核验计划 -->
+    <select id="findAll" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmVrfPlan"
+    		parameterType="com.luckyun.tjam.prophaseMag.verification.param.AmVrfPlanParam">
+		select a.indocno,a.splanno,a.splannm,a.iplanstate,a.ivrfobjid,a.ilineid,a.ivrfyear,a.dvrfstart,a.dvrfend,a.ivrfdeptid,a.iplantype,
+		a.drelease,a.dfinish,a.snote,a.icreatedeptid,a.dregt,a.sregid,a.idel from am_vrf_plan a where a.idel = 0 
+		<if test="condition.iplantype != null and condition.iplantype != '' or condition.iplantype == 0">
+           	and a.iplantype = #{condition.iplantype}  
+        </if>
+        <if test="condition.dreleasestart != null and condition.dreleaseend != null">
+           	and a.drelease between #{condition.dreleasestart} and #{condition.dreleaseend} 
+        </if>
+		order by a.dregt desc
+	</select>
+	
+	<!-- 查询单条设备设施核验计划 --> 
+	<select id="findOne" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmVrfPlan" parameterType="Long">
+		select a.* from am_vrf_plan a
+		where a.indocno = #{indocno} and a.idel = 0 
+	</select>
+	
+	<select id="findIplantypeById" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmVrfPlan" parameterType="Long">
+		select a.indocno,a.iplantype from am_vrf_plan a where a.indocno = #{indocno} and a.idel = 0 
+	</select>
+	
+	<!-- 查询当前天最大计划名称 --> 
+	<select id="findMaxSplannm" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmVrfPlan"
+			parameterType="com.luckyun.tjam.prophaseMag.verification.param.AmVrfPlanParam">
+		select a.splannm 
+		from am_vrf_plan a
+		where a.idel = 0 and a.splannm like '%${condition.splannm}%' and a.iplantype = #{condition.iplantype} order by a.splannm desc 
+	</select>
+	
+	<!-- 查询当前天最大计划编号 --> 
+	<select id="findMaxSplanno" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmVrfPlan"
+			parameterType="com.luckyun.tjam.prophaseMag.verification.param.AmVrfPlanParam">
+		select a.splanno 
+		from am_vrf_plan a
+		where a.idel = 0 and a.splanno like '%${condition.splanno}%' and a.iplantype = #{condition.iplantype} order by a.splanno desc 
+	</select>
+
+	<!-- 查询所有设备设施核验计划 -->
+	<select id="findAlls" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmVrfPlan">
+	select a.*
+	from am_vrf_plan a where a.iplanstate = 0
+	</select>
+</mapper>

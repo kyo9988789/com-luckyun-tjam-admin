@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.prophaseMag.verification.mapper.AmVrfPlanDtFiassetMapper">
+	
+	<!-- 查询所有设备设施核验计划明细 -->
+    <select id="findAll" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmVrfPlanDtFiasset"
+    		parameterType="com.luckyun.tjam.prophaseMag.verification.param.AmVrfPlanDtFiassetParam">
+    	select a.* 
+		from am_vrf_plan_dt_fiasset a
+		where a.idel = 0 
+		order by a.dregt desc 
+	</select>
+
+	<!-- 查询所有设备设施核验计划明细 -->
+	<select id="findAlls" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmVrfPlanDtFiasset">
+    	select a.*
+		from am_vrf_plan_dt_fiasset a
+		order by a.dregt desc
+	</select>
+	
+	<!-- 查询单条设备设施核验计划明细 --> 
+	<select id="findOne" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmVrfPlanDtFiasset" parameterType="Long">
+		select a.* 
+		from am_vrf_plan_dt_fiasset a
+		where a.indocno = #{indocno} and a.idel = 0 
+	</select>
+	
+	<!-- 查询计划下明细数量 --> 
+	<select id="findDetailCountByIndocno" resultType="Integer" parameterType="Long">
+		select count(1) 
+		from am_vrf_plan_dt_fiasset a
+		where a.idel = 0 and a.ilinkno = #{ilinkno}
+	</select>
+	
+	<!-- 通过外键查询所有明细 -->
+    <select id="findAllByIbillid" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmVrfPlanDtFiasset"
+    		parameterType="Long">
+    	select a.* from am_vrf_plan_dt_fiasset a
+		where a.idel = 0 and a.ilinkno = #{ilinkno}
+		order by a.dregt desc 
+	</select>
+	
+	<!-- 通过资产编号查询所有组成部分 -->
+    <select id="findAllBySparent" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmVrfPlanDtFiasset"
+    		parameterType="String">
+    	select a.* 
+		from am_vrf_plan_dt_fiasset a
+		where a.idel = 0 and a.sparentno = #{sparentno}
+		order by a.sfcode asc
+	</select>
+</mapper>

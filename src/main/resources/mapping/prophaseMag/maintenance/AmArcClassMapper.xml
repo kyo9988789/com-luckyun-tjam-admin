@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.prophaseMag.maintenance.mapper.AmArcClassMapper">
+	
+	<!-- 通过父节点查询所有下属子节点分类数据 -->
+	<select id="findAllByIparentid" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmArcClass" parameterType="Long">
+		select a.* 
+		from am_arc_class a
+		where a.iparentid = #{iparentid} and a.idel = 0
+		order by a.dmodt asc
+	</select>
+	
+	<!-- 查询所有资产分类顶级节点 + 二级节点数据，做初始化 --> 
+    <select id="findAll" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmArcClass">
+    	select a.* 
+		from am_arc_class a
+		where a.idel = 0 and (a.indocno = 1 or a.iparentid = 1)
+		order by dmodt asc 
+	</select>
+	
+	<!-- 查询所有资产分类顶级节点 + 二级节点数据，做初始化 --> 
+    <select id="findAllDatas" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmArcClass">
+    	select a.* 
+		from am_arc_class a
+		where a.idel = 0 
+		order by dmodt asc 
+	</select>
+	
+	<!-- 查找当前节点是否有子节点 --> 
+    <select id="findSonByIndocno" resultType="Integer" parameterType="Long">
+    	select count(1)
+		from am_arc_class a
+		where a.idel = 0 and a.iparentid = #{indocno}
+	</select>
+	
+	<!-- 通过设备资产编号查找对应分类名称 --> 
+    <select id="findBySclassno" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmArcClass" parameterType="String">
+    	select *
+		from am_arc_class a
+		where a.idel = 0 and a.sclassno = #{sclassno}
+	</select>
+	
+	<!-- 通过上级分类编码查找上级数据  -->
+	<select id="findParentBySupperno" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmArcClass" parameterType="String">
+    	select *
+		from am_arc_class a
+		where a.sclassno = #{sparentno}
+	</select>
+	
+	<!-- 查询所有 -->
+	<select id="findAllData" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmArcClass">
+    	select a.* 
+		from am_arc_class a
+		order by dmodt asc 
+	</select>
+
+	<!-- 查询单条 -->
+	<select id="findByIndocno" resultType="com.luckyun.tjam.prophaseMag.maintenance.model.AmArcClass" parameterType="Long">
+		select a.*
+		from am_arc_class a
+		where a.indocno = #{indocno} and a.idel = 0
+	</select>
+
+	<!-- 查询对应的sidcc -->
+	<select id="findByIn" resultType="String" parameterType="Long">
+		select a.SIDCC
+		from am_arc_class a
+		where a.indocno = #{iamarcclassid} and a.idel = 0
+	</select>
+
+	<!-- 查询对应的sidcc -->
+	<select id="findSclassno" resultType="String" parameterType="Long">
+		select a.sclassno
+		from am_arc_class a
+		where a.indocno = #{iamarcclassid} and a.idel = 0
+	</select>
+</mapper>

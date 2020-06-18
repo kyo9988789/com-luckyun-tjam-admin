@@ -1,0 +1,153 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.luckyun</groupId>
+		<artifactId>com-luckyun-parent</artifactId>
+		<version>2.0.4-RELEASE</version>
+	</parent>
+	<artifactId>com-luckyun-tjam-admin</artifactId>
+	<version>3.4.9</version>
+	<packaging>war</packaging>
+	<name>com-luckyun-tjam-admin</name>
+	<description>北京城市铁建轨道交通投资发展有限公司固资管理系统</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.luckyun</groupId>
+			<artifactId>com-luckyun-core</artifactId>
+			<version>2.0.5-RELEASE</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.luckyun</groupId>
+			<artifactId>com-luckyun-model</artifactId>
+		</dependency>
+		
+		<!-- <dependency>
+			<groupId>com.luckyun</groupId>
+			<artifactId>com-luckyun-report</artifactId>
+		</dependency> -->
+		
+		<dependency>
+			<groupId>com.luckyun</groupId>
+			<artifactId>com-luckyun-base-provider</artifactId>
+			<version>1.1.16-RELEASE</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.luckyun</groupId>
+			<artifactId>com-luckyun-auth-provider</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.luckyun</groupId>
+			<artifactId>com-luckyun-bpm</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.luckyun</groupId>
+			<artifactId>com-luckyun-restart</artifactId>
+			<version>1.0.1-RELEASE</version>
+		</dependency>
+		<dependency>
+		      <groupId>com.oracle</groupId>
+		      <artifactId>ojdbc6</artifactId>
+		      <version>11.1.0.7.0</version>
+    	</dependency>
+<!--		&lt;!&ndash; https://mvnrepository.com/artifact/com.alibaba/fastjson &ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>com.alibaba</groupId>-->
+<!--			<artifactId>fastjson</artifactId>-->
+<!--			<version>1.2.37</version>-->
+<!--		</dependency>-->
+
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.4.1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.5</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.luckyun</groupId>
+			<artifactId>com-luckyun-report-sdk</artifactId>
+		</dependency>
+	</dependencies>
+
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.spotify</groupId>
+					<artifactId>dockerfile-maven-plugin</artifactId>
+					<version>1.4.10</version>
+					<executions>
+						<execution>
+							<id>default</id>
+							<goals>
+								<goal>build</goal>
+								<goal>push</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<repository>10.10.10.52:5000/${project.name}</repository>
+						<tag>${project.version}</tag>
+						<buildArgs>
+							<WAR_FILE>${project.build.finalName}.war</WAR_FILE>
+						</buildArgs>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+	<repositories>
+		<repository>
+			<id>nexus</id>
+			<name>lucksoft mirror</name>
+			<url>http://10.10.10.243/repository/luck-public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+</project>

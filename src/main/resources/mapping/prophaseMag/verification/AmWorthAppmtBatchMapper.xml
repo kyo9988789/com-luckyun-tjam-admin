@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.prophaseMag.verification.mapper.AmWorthAppmtBatchMapper">
+
+    <!-- 查询所有待分摊项 -->
+    <select id="findAll" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmWorthAppmtBatch"
+            parameterType="com.luckyun.tjam.prophaseMag.verification.param.AmWorthAppmtBatchParam">
+        select a.indocno,a.sfcode,a.sfname,a.ideptid,a.sregid,a.dregt,a.snote,a.iapprovalstate,a.idel from am_worth_appmt_batch a where a.idel = 0
+        order by a.dregt desc
+    </select>
+
+    <!-- 查询单条 -->
+    <select id="findOne" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmWorthAppmtBatch" parameterType="Long">
+		select a.*
+		from am_worth_appmt_batch a
+		where a.indocno = #{indocno} and a.idel = 0
+	</select>
+
+
+    <!-- 查询当前天最大编号 -->
+    <select id="findMaxSappmtno" resultType="com.luckyun.tjam.prophaseMag.verification.model.AmWorthAppmtBatch"
+            parameterType="com.luckyun.tjam.prophaseMag.verification.param.AmWorthAppmtBatchParam">
+		select a.sfcode from am_worth_appmt_batch a
+		where a.idel = 0 and a.sfcode like '%${condition.sfcode}%' order by a.sfcode desc
+	</select>
+
+
+</mapper>

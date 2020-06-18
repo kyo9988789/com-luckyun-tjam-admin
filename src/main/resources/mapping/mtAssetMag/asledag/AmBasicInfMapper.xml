@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.mtAssetMag.asledag.mapper.AmBasicInfMapper">
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="com.luckyun.tjam.mtAssetMag.asledag.model.AmBasicInf"
+            parameterType="com.luckyun.tjam.mtAssetMag.asledag.param.AmBasicInfParam">
+        select a.indocno,a.sfcode,a.sfname,a.iapprovalstate,a.iamarcclassid,a.seqclassno,a.dstart,a.sbrandnm,a.igenetpstateid,a.ilineid,a.sspec
+        ,a.iamclassid,b.sinspos,c.smajornm,idutyid,iuserid,iuserdeptid,imanagedeptid,d.sownernuit,g.iqty,a.idel from am_basic_inf a
+        left join am_basic_loc_area b on a.indocno=b.ilinkno and b. idel = 0
+        left join am_basic_management_inf c on a.indocno=c.ilinkno and c. idel = 0
+        left join am_basic_tenure_inf d on a.indocno=d.ilinkno and d. idel = 0
+        left join am_basic_value_inf g on a.indocno=g.ilinkno and g. idel = 0
+        left join am_arc_class e on e.sclassno = a.iamarcclassid
+        where a.idel = 0
+        <if test="condition.iamarcclassid != null and condition.iamarcclassid != ''">
+            and exists (select 1 from am_arc_class f where instr('/'||f.sidcc||'/', '/'|| #{condition.iamarcclassid} ||'/')>0 and a.seqclassno = f.sclassno)
+        </if>
+        <if test="condition.iamstate != null">
+            and a.iamstate = #{condition.iamstate}
+        </if>
+        <if test="condition.iamclassid != null and condition.iamclassid != '' or condition.iamclassid == 0">
+            and a.iamclassid = #{condition.iamclassid}
+        </if>
+        <if test="condition.sname != null and condition.sname != ''">
+            and (a.sfname like '%${condition.sname}%' or a.sfcode like '%${condition.sname}%')
+        </if>
+        <if test="condition.ilineid != null">
+            and a.ilineid = #{condition.ilineid}
+        </if>
+        <if test="condition.sownernuit != null and condition.sownernuit != ''">
+            and d.sownernuit = #{condition.sownernuit}
+        </if>
+        <if test="condition.smajornm != null and condition.smajornm != ''">
+            and c.smajornm = #{condition.smajornm}
+        </if>
+        <if test="condition.sinspos != null and condition.sinspos != null">
+            and b.sinspos = #{condition.sinspos}
+        </if>
+        <if test="condition.idutyid != null and condition.idutyid != null">
+            and c.idutyid = #{condition.idutyid}
+        </if>
+        <if test="condition.iapprovalstate != null and condition.iapprovalstate != null">
+            and a.iapprovalstate = #{condition.iapprovalstate}
+        </if>
+        order by a.dregt desc
+    </select>
+
+
+    <!-- 查询没有被引用的 -->
+    <select id="readAllHasNotQuoted" resultType="com.luckyun.tjam.mtAssetMag.asledag.model.AmBasicInf"
+            parameterType="com.luckyun.tjam.mtAssetMag.asledag.param.AmBasicInfParam">
+        select a.indocno,a.sfcode,a.sfname,a.iapprovalstate,a.iamarcclassid,a.dstart,a.iquotestate,a.sbrandnm,a.ilineid,a.sspec
+        ,a.iamclassid,b.sinspos,c.smajornm,idutyid,iuserid,iuserdeptid,imanagedeptid,d.sownernuit,g.iqty,a.idel from am_basic_inf a
+        left join am_basic_loc_area b on a.indocno=b.ilinkno
+        left join am_basic_management_inf c on a.indocno=c.ilinkno
+        left join am_basic_tenure_inf d on a.indocno=d.ilinkno
+        left join am_basic_value_inf g on a.indocno=g.ilinkno
+        left join am_arc_class e on e.sclassno = a.iamarcclassid
+        where a.idel = 0 and (a.iquotestate is null or a.iquotestate = 0)
+        order by a.dregt desc
+    </select>
+
+    <!-- 查询单条 -->
+    <select id="findOne" resultType="com.luckyun.tjam.mtAssetMag.asledag.model.AmBasicInf" parameterType="Long">
+		select a.*
+		from am_basic_inf a
+		where a.indocno = #{indocno} and a.idel = 0
+	</select>
+
+    <!-- 查询单条 -->
+    <select id="findByIamstate" resultType="com.luckyun.tjam.mtAssetMag.asledag.model.AmBasicInf" parameterType="Long">
+		select a.dstartfreetime
+		from am_basic_inf a
+		where a.iamstate = 3 and a.idel = 0
+	</select>
+
+    <!-- 查询单条 -->
+    <select id="findBydstart" resultType="com.luckyun.tjam.mtAssetMag.asledag.model.AmBasicInf" parameterType="Long">
+        select a.dstart
+        from am_basic_inf a
+        where a.iamstate = 0 and a.idel = 0
+    </select>
+
+
+    <!-- 查询当前天最大编号 -->
+    <select id="findMaxSappmtno" resultType="com.luckyun.tjam.mtAssetMag.asledag.model.AmBasicInf"
+            parameterType="com.luckyun.tjam.mtAssetMag.asledag.param.AmBasicInfParam">
+        select a.sfcode from am_basic_inf a
+        where a.idel = 0 and a.sfcode like '%${condition.sfcode}%' order by a.sfcode desc
+    </select>
+
+    <update id="updateIupdateState" parameterType="Long">
+        update am_basic_inf set iamstate = null where indocno = #{indocno}
+    </update>
+
+</mapper>

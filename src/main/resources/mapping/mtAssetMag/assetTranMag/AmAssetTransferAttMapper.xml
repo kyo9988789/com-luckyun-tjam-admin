@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luckyun.tjam.mtAssetMag.assetTranMag.mapper.AmAssetTransferAttMapper">
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="com.luckyun.tjam.mtAssetMag.assetTranMag.model.AmAssetTransferAtt"
+            parameterType="com.luckyun.tjam.mtAssetMag.assetTranMag.param.AmAssetTransferAttParam">
+        select a.indocno,a.ilinkno,a.sfname,a.sregid,a.dregt from am_asset_transfer_att a
+        order by a.dregt desc
+    </select>
+
+    <!-- 查询单条 -->
+    <select id="findOne" resultType="com.luckyun.tjam.mtAssetMag.assetTranMag.model.AmAssetTransferAtt" parameterType="Long">
+		select a.*
+		from am_asset_transfer_att a
+		where a.indocno = #{indocno}
+	</select>
+
+    <!-- 通过外键查询所有 -->
+    <select id="findAllByIlinkno" resultType="com.luckyun.tjam.mtAssetMag.assetTranMag.model.AmAssetTransferAtt" parameterType="Long">
+		select a.* from am_asset_transfer_att  a
+		where a.ilinkno = #{ilinkno}
+		order by a.dregt desc
+	</select>
+
+
+</mapper>
